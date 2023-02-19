@@ -1,0 +1,17 @@
+POST http://localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "firstname" : "test",
+  "lastaname" : "hhhh",
+  "email" : "nottest@tmail.com",
+  "password" : "12345"
+}
+####
+POST http://localhost:8080/api/v1/auth/authenticate
+Content-Type: application/json
+
+{
+"email" : "testtest@tmail.com",
+"password" : "12345"
+}
