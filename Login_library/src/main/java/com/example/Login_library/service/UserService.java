@@ -28,31 +28,29 @@ public class UserService {
     }
 
     public void deleteUser(User user) {
-        userRepository
-                .delete(userRepository
-                        .findById(user.getId())
-                        .orElseThrow(
-                                ()-> new UsernameNotFoundException("user not found")
-                        )
-                );
+
+        userRepository.delete(user);
     }
 
-    public User getUserById(long id) {
+    public User getUserById(long id)  {
         return userRepository.
                 findById(id).
                 orElseThrow(
-                        ()-> new UsernameNotFoundException("user not found"));
+                        ()-> new RuntimeException("user not found"));
     }
 
     public User getUserByEmail(String email) {
         return userRepository.
                 findByEmail(email).
                 orElseThrow(
-                        ()-> new UsernameNotFoundException("user not found"));
+                        ()-> new RuntimeException("user not found"));
     }
 
     public void promoteUser(User user){
-        Role role = roleRepository.findByName("Admin").orElseThrow(()->new RuntimeException());
+        Role role = roleRepository.findByName("Admin")
+                .orElseThrow(
+                        ()->new RuntimeException()
+                );
         var list = user.getRoles();
         list.add(role);
         user.setRoles(list);
