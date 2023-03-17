@@ -1,20 +1,21 @@
 package com.example.library_management.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ClaimsMutator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
-@Service
+@Component
 public class JwtService {
 
     private static final String SECREY_KEY = "48404D635166546A576E5A7234743777217A25432A462D4A614E645267556B58";
@@ -28,7 +29,7 @@ public class JwtService {
                 .setClaims(extraCLaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000*60*5))
+                .setExpiration(new Date(System.currentTimeMillis()+ 1000*60*60*24))
                 .signWith(getSignInkey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -39,7 +40,6 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
-
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
@@ -55,7 +55,7 @@ public class JwtService {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInkey())
                 .build()
-                 .parseClaimsJws(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
